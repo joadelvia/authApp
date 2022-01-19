@@ -1,4 +1,6 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,14 +10,29 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor() { }
-
+  constructor(private httpClient: HttpClient) { }
+  private baseUrl: string = environment.baseUrl;
   ngOnInit(): void {
   }
 
-  const headers = new Headers({
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${auth_token}`
-  })
+  
+  getProducts(){
+    let token = JSON.parse(<string>localStorage.getItem('jwt'))
+    .access_token;
+    
+    
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    })
+    const options = {
+      headers: headers
+    }
+    let url = `${this.baseUrl}/products`;
+    this.httpClient.get(url)
+    .subscribe(resp => console.log(resp))
+
+    
+  }
 
 }
